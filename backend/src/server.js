@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(clerkMiddleware());
-app.use(arcjetMiddleware)
+app.use(arcjetMiddleware);
 
 app.get("/", (req, res) => {
   res.send("Hello from server");
@@ -39,9 +39,11 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    app.listen(ENV.PORT, () =>
-      console.log("Server is up and running on PORT:", ENV.PORT),
-    );
+    if (ENV.NODE_ENV !== "production") {
+      app.listen(ENV.PORT, () =>
+        console.log("Server is up and running on PORT:", ENV.PORT),
+      );
+    }
   } catch (error) {
     console.log("Failed to start server:", error.message);
     process.exit(1);
@@ -49,3 +51,7 @@ const startServer = async () => {
 };
 
 startServer();
+
+
+// export for vercel
+export default app;
